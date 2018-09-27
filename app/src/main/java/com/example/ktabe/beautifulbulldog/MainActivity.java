@@ -11,7 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import io.realm.Realm;
+
 public class MainActivity extends AppCompatActivity {
+
+    public User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Realm realm = Realm.getDefaultInstance();
+        String username = (String) getIntent().getStringExtra("username");
+        user = realm.where(User.class).equalTo("username",username).findFirst();
 
     }
 

@@ -9,12 +9,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import io.realm.RealmResults;
+
 public class BulldogAdapter extends RecyclerView.Adapter<BulldogAdapter.BulldogViewHolder> {
     private Context context;
-    private ArrayList<Bulldog> bulldogs;
+    private RealmResults<Bulldog> bulldogs;
     private RecyclerViewClickListener mListener;
 
-    public BulldogAdapter(Context context, ArrayList<Bulldog> dataSet, RecyclerViewClickListener clickListener) {
+    public BulldogAdapter(Context context, RealmResults<Bulldog> dataSet, RecyclerViewClickListener clickListener) {
         this.context = context;
         this.bulldogs = dataSet;
         this.mListener = clickListener;
@@ -23,6 +25,7 @@ public class BulldogAdapter extends RecyclerView.Adapter<BulldogAdapter.BulldogV
     public static class BulldogViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView nameView;
         public TextView ageView;
+
         private RecyclerViewClickListener mListener;
         public BulldogViewHolder(View v, RecyclerViewClickListener listener) {
             super(v);
