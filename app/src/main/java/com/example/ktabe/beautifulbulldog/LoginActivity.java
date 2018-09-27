@@ -8,6 +8,9 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Button loginButton;
@@ -23,12 +26,50 @@ public class LoginActivity extends AppCompatActivity {
         emailField = (EditText) findViewById(R.id.email_field);
         passwordField = (EditText) findViewById(R.id.password_field);
 
-        loginButton.setOnClickListener(new View.OnClickListener(){
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                Intent intent = new Intent(view.getContext(), MainActivity.class);
-                intent.putExtra("email",emailField.getText().toString());
-                startActivity(intent);
+            public void onClick(View view) {
+                Realm realm = Realm.getDefaultInstance();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        User user = new User();
+                        user.setUsername(emailField.getText().toString());
+                        realm.copyToRealmOrUpdate(user);
+
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        intent.putExtra("username", user.getUsername());
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
+
+        Realm realm = Realm.getDefaultInstance();
+        final RealmResults<Bulldog> dogs = realm.where(Bulldog.class).findAll();
+        if (dogs.size() == 0) {
+            populateBulldogs();
+
+        }
+
+    }
+
+    private void populateBulldogs() {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Bulldog dog1 = new Bulldog();
+                dog1.setId("1");
+                dog1.setName("Spots");
+                dog1.setAge("2");
+                realm.copyToRealmOrUpdate(dog1);
+
+                Bulldog dog2 = new Bulldog();
+                dog1.setId("2");
+                dog2.setName("Spike");
+                dog2.setAge("12");
+                realm.copyToRealmOrUpdate(dog2);
             }
         });
     }
