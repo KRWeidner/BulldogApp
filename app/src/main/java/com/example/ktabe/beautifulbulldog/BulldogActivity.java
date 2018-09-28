@@ -1,10 +1,13 @@
 package com.example.ktabe.beautifulbulldog;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -18,6 +21,7 @@ public class BulldogActivity extends AppCompatActivity {
     private Button voteButton;
     private Realm realm;
     private TextView voteText;
+    private ImageView voteImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class BulldogActivity extends AppCompatActivity {
         textAge = (TextView) findViewById(R.id.text_age);
         voteSpinner = (Spinner) findViewById(R.id.vote_spinner);
         voteButton = (Button) findViewById(R.id.vote_button);
+        voteImage = (ImageView) findViewById(R.id.vote_image);
 
         Integer[] items = new Integer[]{1,2,3,4,5};
         ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item, items);
@@ -43,6 +48,10 @@ public class BulldogActivity extends AppCompatActivity {
         textName.setText(bulldog.getName());
         textAge.setText(bulldog.getAge());
 
+        if(bulldog.getImage() != null) {
+            Bitmap bmp = BitmapFactory.decodeByteArray(bulldog.getImage(), 0, bulldog.getImage().length);
+            voteImage.setImageBitmap(bmp);
+        }
 
 
         voteButton.setOnClickListener(new View.OnClickListener() {
