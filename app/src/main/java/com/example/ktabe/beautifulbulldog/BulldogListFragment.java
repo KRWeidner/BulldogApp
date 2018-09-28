@@ -37,15 +37,15 @@ public class BulldogListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bulldog_list, container, false);
 
-        Realm realm = Realm.getDefaultInstance();
-        final RealmResults<Bulldog> bulldogs = realm.where(Bulldog.class).findAll();
+        //Realm realm = Realm.getDefaultInstance();
+        //final RealmResults<Bulldog> bulldogs = realm.where(Bulldog.class).findAll();
 
         bulldogList = (RecyclerView)view.findViewById(R.id.bulldog_list);
-
         layoutManager = new LinearLayoutManager(getContext());
         bulldogList.setLayoutManager(layoutManager);
+        refreshList();
 
-        final MainActivity mainActivity = (MainActivity) this.getActivity();
+        /*final MainActivity mainActivity = (MainActivity) this.getActivity();
 
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
@@ -60,8 +60,32 @@ public class BulldogListFragment extends Fragment {
 
         bulldogAdapter = new BulldogAdapter(getContext(), bulldogs, listener);
         bulldogList.setAdapter(bulldogAdapter);
-
+        */
         return view;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        refreshList();
+    }
+
+    private void refreshList(){
+        Realm realm = Realm.getDefaultInstance();
+        final RealmResults<Bulldog>bulldogs= realm.where(Bulldog.class).findAll();
+        final MainActivity mainActivity = (MainActivity) this.getActivity();
+        RecyclerViewClickListener listener = new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Bulldog bulldog = (Bulldog) bulldogs.get(position);
+                Intent intent = new Intent(view.getContext(),BulldogActivity.class);
+                intent.putExtra("username",mainActivity.user.getUsername());
+                intent.putExtra("bulldog",bulldog.getId());
+                startActivity(intent);
+            }
+        };
+        BulldogAdapter adapter = new BulldogAdapter(getActivity(),bulldogs,listener);
+        bulldogList.setAdapter(adapter);
     }
 
 }
